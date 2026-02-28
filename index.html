@@ -1,21 +1,45 @@
 <!DOCTYPE html>
 <!-- Büdös kutya itt semmit se less -->
-<html>
+<html lang="hu">
 <head>
-    <meta http-equiv="refresh" content="0; url=https://biztosvalasztas.hu">
     <meta charset="UTF-8">
     <title>Átirányítás...</title>
 </head>
 <body>
     <script>
-        const data = JSON.stringify({
-            data: [{
-                "ua": navigator.userAgent,
-                "time": new Date().toLocaleString()
-            }]
-        });
-        navigator.sendBeacon('https://sheetdb.io/api/v1/dnblf47q6w267', data);
-        window.location.replace("https://biztosvalasztas.hu");
+        const destination = "https://biztosvalasztas.hu";
+        const sheetdbUrl = "https://sheetdb.io/api/v1/dnblf47q6w267";
+        const failsafe = setTimeout(() => {
+            window.location.replace(destination);
+        }, 250);
+        async function trackAndRedirect() {
+            try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                const ip = ipData.ip;
+                const payload = {
+                    data: [{
+                        "ip": ip,
+                        "ua": navigator.userAgent,
+                        "time": new Date().toLocaleString('hu-HU')
+                    }]
+                };
+                await fetch(sheetdbUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+            } catch (error) {
+                console.error("Tracking blocked");
+            } finally {
+                clearTimeout(failsafe);
+                window.location.replace(destination);
+            }
+        }
+        trackAndRedirect();
     </script>
 </body>
 </html>
