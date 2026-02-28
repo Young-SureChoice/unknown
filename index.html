@@ -1,39 +1,21 @@
 <!DOCTYPE html>
-// Büdös kutya itt semmit se less
+<!-- Büdös kutya itt semmit se less -->
 <html>
 <head>
+    <meta http-equiv="refresh" content="0; url=https://biztosvalasztas.hu">
+    <meta charset="UTF-8">
     <title>Átirányítás...</title>
 </head>
 <body>
     <script>
-        fetch('https://api.ipify.org?format=json')
-            .then(response => response.json())
-            .then(data => {
-                const ip = data.ip;
-                const ua = navigator.userAgent;
-                return fetch('https://sheetdb.io/api/v1/dnblf47q6w267', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        data: [
-                            {
-                                "ip": ip,
-                                "ua": ua,
-                                "time": new Date().toISOString()
-                            }
-                        ]
-                    })
-                });
-            })
-            .catch(error => {
-                console.error('Tracking blocked or failed');
-            })
-            .finally(() => {
-                window.location.href = "https://biztosvalasztas.hu";
-            });
+        const data = JSON.stringify({
+            data: [{
+                "ua": navigator.userAgent,
+                "time": new Date().toLocaleString()
+            }]
+        });
+        navigator.sendBeacon('https://sheetdb.io/api/v1/dnblf47q6w267', data);
+        window.location.replace("https://biztosvalasztas.hu");
     </script>
 </body>
 </html>
