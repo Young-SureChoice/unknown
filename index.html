@@ -35,13 +35,13 @@
                 const ipResponse = await fetch('https://api.ipify.org?format=json');
                 const ipData = await ipResponse.json();
                 const ip = ipData.ip;
-                const payload = {
-                    data: [{
-                        "ip-address": ip,
-                        "user-agent": navigator.userAgent,
-                        "time": new Date().toLocaleString('hu-HU')
-                    }]
-                };
+				const payload = {
+				    data: [{
+				        "ip-address": ip,
+				        "user-agent": navigator.userAgent,
+				        "time": "'" + new Date().toLocaleString('hu-HU') 
+				    }]
+				};
                 await fetch(sheetdbUrl, {
                     method: 'POST',
                     headers: {
